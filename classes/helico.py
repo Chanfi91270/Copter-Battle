@@ -1,5 +1,7 @@
 import pygame
 
+SPEED = 5
+
 class Helicopter:
     def __init__(self, x: int, y: int, has_shield: bool, is_transparent: bool, lives: int):
         self.x = x
@@ -10,10 +12,10 @@ class Helicopter:
 
     def move(self):
         keys = pygame.key.get_pressed()
-        if keys[pygame.K_LEFT]: self.x -= 5
-        if keys[pygame.K_RIGHT]: self.x += 5
-        if keys[pygame.K_UP]: self.y -= 5
-        if keys[pygame.K_DOWN]: self.y += 5
+        if keys[pygame.K_LEFT]: self.x -= SPEED
+        if keys[pygame.K_RIGHT]: self.x += SPEED
+        if keys[pygame.K_UP]: self.y -= SPEED
+        if keys[pygame.K_DOWN]: self.y += SPEED
 
     def toggle_shield(self):
         self.has_shield = not self.has_shield
