@@ -9,7 +9,7 @@ pygame.display.set_caption("Copter Battle")
 info = pygame.display.Info()
 SCREEN_WIDTH, SCREEN_HEIGHT = info.current_w, info.current_h
 
-image_fond = pygame.image.load("fond(1).png").convert()
+image_fond = pygame.image.load('./images/fond(1).png').convert()
 image_fond = pygame.transform.scale(image_fond, (SCREEN_WIDTH, SCREEN_HEIGHT))
 
 Vert = (120, 150, 80)
