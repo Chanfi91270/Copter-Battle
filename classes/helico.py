@@ -9,6 +9,7 @@ class Helicopter:
         self.has_shield = has_shield
         self.is_transparent = is_transparent
         self.lives = lives
+        self.rect = self.image.get_rect(topleft=(self.x, self.y))
 
     def move(self):
         keys = pygame.key.get_pressed()
@@ -31,3 +32,6 @@ class Helicopter:
         else:
             self.lives -= 1
             self.set_transparency(True)
+
+    def check_collision(self, other_rect):
+        return self.rect.colliderect(other_rect)
