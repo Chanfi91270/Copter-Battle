@@ -13,6 +13,7 @@ pygame.display.set_caption("Copter Battle")
 info = pygame.display.Info()
 SCREEN_WIDTH, SCREEN_HEIGHT = info.current_w, info.current_h
 
+#Images pour fond
 
 image_fond_menu = pygame.image.load('./images/fond_accueil.png').convert()
 image_fond_menu = pygame.transform.scale(image_fond_menu, (SCREEN_WIDTH, SCREEN_HEIGHT))
@@ -31,6 +32,18 @@ touches_j2 = {"gauche": pygame.K_LEFT, "droite": pygame.K_RIGHT, "haut": pygame.
 
 helico1 = Helicopter(50, 100, False, False,3,img_helico1, touches_j1)
 helico2 = Helicopter(50, SCREEN_HEIGHT - 250, False, False, 3,img_helico2, touches_j2)
+
+#Images pour obstacles
+img_rock = pygame.image.load('./images/rock.png').convert_alpha()
+img_avion = pygame.image.load('./images/avion.png').convert_alpha()
+
+images_obstacles = {
+    "rock": img_rock,
+    "avion": img_avion
+}
+
+obstacles = []
+spawn_timer = 0
 
 Vert = (120, 150, 80)
 Blanc = (255, 255, 255)
@@ -115,14 +128,30 @@ while running:
         screen.blit(txt_wait, txt_wait.get_rect(center=(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2)))
 
     elif etape == "EN_JEU":
-        screen.blit(image_desert, (0, 0))  # Fond desert ici
+        screen.blit(image_desert, (0, 0))
+
+        # Spawn aléatoire
+        spawn_timer += 1
+        if spawn_timer >= 120:  # toutes les 2 secondes environ
+            obstacles.append(spawn_obstacle(SCREEN_WIDTH, SCREEN_HEIGHT, images_obstacles))
+            spawn_timer = 0
+
+        # Mettre à jour et dessiner les obstacles
+        for obs in obstacles:
+            obs.move()
+            obs.shoot()
+            obs.update_projectiles()
+            screen.blit(obs.image, obs.hitbox)
+
+        # Supprimer les obstacles hors écran
+        obstacles = [o for o in obstacles if not o.hitbox.right < 0 and not o.is_dead()]
+
+        # Hélicos
         helico1.move(SCREEN_WIDTH, SCREEN_HEIGHT)
         helico2.move(SCREEN_WIDTH, SCREEN_HEIGHT)
-
         screen.blit(helico1.image, helico1.rect)
         screen.blit(helico2.image, helico2.rect)
-
-
+        
     pygame.display.flip()
     clock.tick(60)
 

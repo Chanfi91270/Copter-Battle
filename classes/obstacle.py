@@ -4,9 +4,9 @@ import pygame
 SPEED = 3
 
 class Obstacle:
-    def __init__(self, x: int, y: int, image : pygame.Surface, is_transparent: bool, lives: int, mobile: bool, armed: bool):
+    def __init__(self, x: int, y: int, image : pygame.Surface, lives: int, mobile: bool, armed: bool):
         self.image = image
-        self.is_transparent = is_transparent
+        self.is_transparent = False
         self.lives = lives
         self.mobile = mobile
         self.hitbox = self.image.get_rect(topleft=(x,y))
@@ -48,7 +48,7 @@ class Obstacle:
         return self.lives <= 0
     
     def check_collision(self, other_rect):
-        return self.rect.colliderect(other_rect)
+        return self.hitbox.colliderect(other_rect)
     
     
 def spawn_obstacle(screen_width: int, screen_height: int, images: dict) -> Obstacle:
