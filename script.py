@@ -22,14 +22,14 @@ image_desert = pygame.image.load('./images/fond_jeu.png').convert()
 image_desert = pygame.transform.scale(image_desert, (SCREEN_WIDTH, SCREEN_HEIGHT))
 
 image_coeur = pygame.image.load('./images/coeur.png').convert_alpha()
-
+image_coeur = pygame.transform.scale(image_coeur, (25, 25))
 #Images pour hélicos
 
 img_helico1 = pygame.image.load('./images/helicoJ1.png').convert_alpha()
-img_helico1 = pygame.transform.scale(img_helico1, (105, 90))
+img_helico1 = pygame.transform.scale(img_helico1, (110, 90))
 
 img_helico2 = pygame.image.load('./images/helicoJ2.png').convert_alpha()
-img_helico2 = pygame.transform.scale(img_helico2, (105, 90))
+img_helico2 = pygame.transform.scale(img_helico2, (110, 90))
 
 gif_chargement = []
 for i in range(1, 9):  
@@ -44,7 +44,9 @@ helico2 = Helicopter(50, SCREEN_HEIGHT - 250, False, False, 3,img_helico2, touch
 
 #Images pour obstacles
 img_rock = pygame.image.load('./images/rock.png').convert_alpha()
+img_rock = pygame.transform.scale(img_rock, (120, 120))
 img_avion = pygame.image.load('./images/avion.png').convert_alpha()
+img_avion = pygame.transform.scale(img_avion, (110, 90))
 
 images_obstacles = {
     "rock": img_rock,
@@ -160,8 +162,25 @@ while running:
         screen.blit(image_desert, (0, 0))
         txt_vie_j1 = font_sub.render(f"Joueur 1:", True, Blanc)
         txt_vie_j2 = font_sub.render(f"Joueur 2:", True, Blanc)
-        screen.blit(txt_vie_j1, (20, 20))
-        screen.blit(txt_vie_j2, (SCREEN_WIDTH - 150, 20))
+
+        for i in range (helico1.lives):
+            coeur_j1_rect = image_coeur.get_rect(midleft=(txt_vie_j1.get_rect(topleft=(20, 20)).right + 10 + i*30, txt_vie_j1.get_rect(topleft=(20, 20)).centery))
+            screen.blit(image_coeur, coeur_j1_rect)
+        for i in range (helico2.lives):
+            coeur_j2_rect = image_coeur.get_rect(midleft=(txt_vie_j2.get_rect(topright=(SCREEN_WIDTH - 20, 20)).right + 10 + i*30, txt_vie_j2.get_rect(topright=(SCREEN_WIDTH - 20, 20)).centery))
+            screen.blit(image_coeur, coeur_j2_rect)
+
+        txt_vie_j1_rect = txt_vie_j1.get_rect(topleft=(20, 20))
+        txt_vie_j2_rect = txt_vie_j2.get_rect(topright=(SCREEN_WIDTH - 20, 20))
+        screen.blit(txt_vie_j1, txt_vie_j1_rect)
+        screen.blit(txt_vie_j2, txt_vie_j2_rect)
+
+        coeur_j1_rect = image_coeur.get_rect(midleft=(txt_vie_j1_rect.right + 10, txt_vie_j1_rect.centery))
+        
+        coeur_j2_rect = image_coeur.get_rect(midleft=(txt_vie_j2_rect.right + 10, txt_vie_j2_rect.centery))
+        screen.blit(image_coeur, coeur_j1_rect)
+        screen.blit(image_coeur, coeur_j2_rect)
+
         # Spawn aléatoire
         spawn_timer += 1
         if spawn_timer >= 120:  # toutes les 2 secondes environ
