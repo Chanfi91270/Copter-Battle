@@ -21,14 +21,18 @@ image_fond_menu = pygame.transform.scale(image_fond_menu, (SCREEN_WIDTH, SCREEN_
 image_desert = pygame.image.load('./images/fond_jeu.png').convert()
 image_desert = pygame.transform.scale(image_desert, (SCREEN_WIDTH, SCREEN_HEIGHT))
 
+image_coeur = pygame.image.load('./images/coeur.png').convert_alpha()
+
+#Images pour hélicos
+
 img_helico1 = pygame.image.load('./images/helicoJ1.png').convert_alpha()
-img_helico1 = pygame.transform.scale(img_helico1, (210, 180))
+img_helico1 = pygame.transform.scale(img_helico1, (105, 90))
 
 img_helico2 = pygame.image.load('./images/helicoJ2.png').convert_alpha()
-img_helico2 = pygame.transform.scale(img_helico2, (210, 180))
+img_helico2 = pygame.transform.scale(img_helico2, (105, 90))
 
 gif_chargement = []
-for i in range(1, 9):  # 8 frames
+for i in range(1, 9):  
     img = pygame.image.load(f'./images/gif/loading_{i}.png').convert_alpha()
     gif_chargement.append(img)
 
@@ -139,7 +143,10 @@ while running:
 
     elif etape == "EN_JEU":
         screen.blit(image_desert, (0, 0))
-
+        txt_vie_j1 = font_sub.render(f"Joueur 1:", True, Blanc)
+        txt_vie_j2 = font_sub.render(f"Joueur 2:", True, Blanc)
+        screen.blit(txt_vie_j1, (20, 20))
+        screen.blit(txt_vie_j2, (SCREEN_WIDTH - 150, 20))
         # Spawn aléatoire
         spawn_timer += 1
         if spawn_timer >= 120:  # toutes les 2 secondes environ
@@ -159,6 +166,7 @@ while running:
         # Hélicos
         helico1.move(SCREEN_WIDTH, SCREEN_HEIGHT)
         helico2.move(SCREEN_WIDTH, SCREEN_HEIGHT)
+        print(helico1.lives, helico2.lives)
         screen.blit(helico1.image, helico1.rect)
         screen.blit(helico2.image, helico2.rect)
         
