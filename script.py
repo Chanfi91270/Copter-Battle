@@ -1,7 +1,7 @@
-import pygame, random
+import pygame
 from classes.helico import Helicopter
 from classes.obstacle import Obstacle, spawn_obstacle
-from classes.bonus import Bonus
+from classes.bonus import Bonus, spawn_bonus
 from classes.joueur import Joueur  
  
 
@@ -48,7 +48,22 @@ images_obstacles = {
 }
 
 obstacles = []
-spawn_timer = 0  
+spawn_timer = 0
+
+
+img_bonus_bombe = pygame.image.load('./images/bombe.png').convert_alpha()
+img_bonus_rafale = pygame.image.load('./images/rafale_tir.png').convert_alpha()
+img_bonus_bouclier = pygame.image.load('./images/bouclier.png').convert_alpha()
+
+images_bonus = {
+    "bombe": img_bonus_bombe,
+    "rafale": img_bonus_rafale,
+    "bouclier": img_bonus_bouclier
+}
+
+bonuses = []
+bonus_spawn_timer = 0
+
 
 Vert = (120, 150, 80)
 Blanc = (255, 255, 255)
@@ -146,6 +161,11 @@ while running:
             obstacles.append(spawn_obstacle(SCREEN_WIDTH, SCREEN_HEIGHT, images_obstacles))
             spawn_timer = 0
 
+        bonus_spawn_timer += 1
+        if bonus_spawn_timer >= 180:  # toutes les 3 secondes environ
+            bonuses.append(spawn_bonus(SCREEN_WIDTH, SCREEN_HEIGHT, images_bonus))
+            bonus_spawn_timer = 0
+
         # Mettre à jour et dessiner les obstacles
         for obs in obstacles:
             obs.move()
@@ -153,8 +173,22 @@ while running:
             obs.update_projectiles()
             screen.blit(obs.image, obs.hitbox)
 
+         # Mettre à jour et dessiner les bonus
+        for bonus in bonuses:
+         bonus.move()
+         screen.blit(bonus.image, bonus.rect)
+
+         if bonus.check_collision(helico1):
+            bonus.apply(helico1)
+
+         elif bonus.check_collision(helico2):
+            bonus.apply(helico2)
+
         # Supprimer les obstacles hors écran
         obstacles = [o for o in obstacles if not o.hitbox.right < 0 and not o.is_dead()]
+
+        # Supprimer les bonus hors écran
+        bonuses = [b for b in bonuses if not b.rect.right < 0 and b.active]
 
         # Hélicos
         helico1.move(SCREEN_WIDTH, SCREEN_HEIGHT)
