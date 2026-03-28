@@ -4,17 +4,19 @@ import pygame
 SPEED = 5
 
 class Helicopter:
-    def __init__(self, x: int, y: int, has_shield: bool, is_transparent: bool, lives: int, image : pygame.Surface, touches : dict):
+    def __init__(self, x: int, y: int, is_transparent: bool, lives: int, image : pygame.Surface, touches : dict):
         self.image = image
-        self.has_shield = has_shield
         self.is_transparent = is_transparent
         self.lives = lives
         self.rect = self.image.get_rect(topleft=(x, y))
         self.touches = touches
+
+        self.bonus_shield = False
         self.bonus_bombes = False
-        self.mode_rafale = False
+        self.bonus_rafale = False
+
         self.nb_rafale = 2
-        self.temps_bouclier = 2
+        self.temps_bouclier = 0
 
     def move(self, screen_width, screen_height):
         if self.rect.left > 0: self.rect.x -= 1
@@ -26,7 +28,7 @@ class Helicopter:
         if keys[self.touches["bonus"]]: pass
 
     def toggle_shield(self):
-        self.has_shield = not self.has_shield
+        self.bonus_shield = not self.bonus_shield
 
     def set_transparency(self, is_transparent: bool):
         self.is_transparent = is_transparent
@@ -34,7 +36,7 @@ class Helicopter:
         self.is_transparent = False
 
     def take_damage(self):
-        if self.has_shield:
+        if self.bonus_shield:
             self.toggle_shield()
         else:
             self.lives -= 1

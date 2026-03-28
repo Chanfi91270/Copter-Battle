@@ -13,6 +13,8 @@ pygame.display.set_caption("Copter Battle")
 info = pygame.display.Info()
 SCREEN_WIDTH, SCREEN_HEIGHT = info.current_w, info.current_h
 
+LIVES = 3
+
 #Images pour fond
 
 image_fond_menu = pygame.image.load('./images/fond_accueil.png').convert()
@@ -42,8 +44,8 @@ for i in range(1, 9):
 touches_j1 = {"gauche": pygame.K_q, "droite": pygame.K_d, "haut": pygame.K_z, "bas": pygame.K_s, "bonus": pygame.K_a}
 touches_j2 = {"gauche": pygame.K_LEFT, "droite": pygame.K_RIGHT, "haut": pygame.K_UP, "bas": pygame.K_DOWN, "bonus": pygame.K_RSHIFT}
 
-helico1 = Helicopter(50, 100, False, False,3,img_helico1, touches_j1)
-helico2 = Helicopter(50, SCREEN_HEIGHT - 250, False, False, 3,img_helico2, touches_j2)
+helico1 = Helicopter(50, 100, False,LIVES,img_helico1, touches_j1)
+helico2 = Helicopter(50, SCREEN_HEIGHT - 250, False, LIVES,img_helico2, touches_j2)
 
 #Images pour obstacles
 img_rock = pygame.image.load('./images/rock.png').convert_alpha()
@@ -96,9 +98,9 @@ font_bonus = pygame.font.SysFont("Arial", 18, bold=True)
 
 
 def get_current_bonus(helico):
-    if helico.has_shield:
+    if helico.bonus_shield:
         return "bouclier"
-    if helico.mode_rafale:
+    if helico.bonus_rafale:
         return "rafale"
     if helico.bonus_bombes:
         return "bombe"

@@ -19,14 +19,18 @@ class Bonus:
     def apply(self, helicopter):
         if self.bonus_type == "bombe":
             helicopter.bonus_bombes = True
+            helicopter.bonus_shield = False
+            helicopter.bonus_rafale = False
 
         elif self.bonus_type == "rafale":
-            helicopter.mode_rafale = True
-            helicopter.temps_rafale = self.duration
+            helicopter.bonus_rafale = True
+            helicopter.bonus_shield = False
+            helicopter.bonus_bombes = False
 
         elif self.bonus_type == "bouclier":
-            helicopter.has_shield = True
-            helicopter.temps_bouclier = self.duration
+            helicopter.bonus_shield = True
+            helicopter.bonus_bombes = False
+            helicopter.bonus_rafale = False
 
         self.active = False
 
@@ -34,7 +38,6 @@ class Bonus:
         return self.rect.colliderect(helicopter.rect)
 
 
-# ✅ IMPORTANT : en dehors de la classe
 def spawn_bonus(screen_width: int, screen_height: int, images: dict) -> Bonus:
     bonus_type = random.choice(list(images.keys()))
     image = images[bonus_type]
