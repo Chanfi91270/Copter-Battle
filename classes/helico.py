@@ -17,6 +17,7 @@ class Helicopter:
         self.temps_bouclier = 0
 
     def move(self, screen_width, screen_height):
+        self.rect.x -= 3
         keys = pygame.key.get_pressed()
         if keys[self.touches["gauche"]] and self.rect.left > 0: self.rect.x -= SPEED
         if keys[self.touches["droite"]] and self.rect.right < screen_width: self.rect.x += SPEED
