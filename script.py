@@ -40,7 +40,9 @@ helico2 = Helicopter(50, SCREEN_HEIGHT - 250, False, False, 3,img_helico2, touch
 
 #Images pour obstacles
 img_rock = pygame.image.load('./images/rock.png').convert_alpha()
+img_rock = pygame.transform.scale(img_rock, (100, 100))
 img_avion = pygame.image.load('./images/avion.png').convert_alpha()
+img_avion = pygame.transform.scale(img_avion, (100, 100))
 
 images_obstacles = {
     "rock": img_rock,
@@ -52,8 +54,11 @@ spawn_timer = 0
 
 
 img_bonus_bombe = pygame.image.load('./images/bombe.png').convert_alpha()
+img_bonus_bombe = pygame.transform.scale(img_bonus_bombe, (100, 100))
 img_bonus_rafale = pygame.image.load('./images/rafale_tir.png').convert_alpha()
+img_bonus_rafale = pygame.transform.scale(img_bonus_rafale, (100, 100))
 img_bonus_bouclier = pygame.image.load('./images/bouclier.png').convert_alpha()
+img_bonus_bouclier = pygame.transform.scale(img_bonus_bouclier, (100, 100))
 
 images_bonus = {
     "bombe": img_bonus_bombe,
