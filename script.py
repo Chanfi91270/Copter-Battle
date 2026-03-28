@@ -163,23 +163,19 @@ while running:
         txt_vie_j1 = font_sub.render(f"Joueur 1:", True, Blanc)
         txt_vie_j2 = font_sub.render(f"Joueur 2:", True, Blanc)
 
-        for i in range (helico1.lives):
-            coeur_j1_rect = image_coeur.get_rect(midleft=(txt_vie_j1.get_rect(topleft=(20, 20)).right + 10 + i*30, txt_vie_j1.get_rect(topleft=(20, 20)).centery))
-            screen.blit(image_coeur, coeur_j1_rect)
-        for i in range (helico2.lives):
-            coeur_j2_rect = image_coeur.get_rect(midleft=(txt_vie_j2.get_rect(topright=(SCREEN_WIDTH - 20, 20)).right + 10 + i*30, txt_vie_j2.get_rect(topright=(SCREEN_WIDTH - 20, 20)).centery))
-            screen.blit(image_coeur, coeur_j2_rect)
-
         txt_vie_j1_rect = txt_vie_j1.get_rect(topleft=(20, 20))
-        txt_vie_j2_rect = txt_vie_j2.get_rect(topright=(SCREEN_WIDTH - 20, 20))
+        reserve_coeurs_j2 = 10 + image_coeur.get_width() + max(0, helico2.lives - 1) * 30
+        txt_vie_j2_rect = txt_vie_j2.get_rect(topright=(SCREEN_WIDTH - 20 - reserve_coeurs_j2, 20))
+
         screen.blit(txt_vie_j1, txt_vie_j1_rect)
         screen.blit(txt_vie_j2, txt_vie_j2_rect)
 
-        coeur_j1_rect = image_coeur.get_rect(midleft=(txt_vie_j1_rect.right + 10, txt_vie_j1_rect.centery))
-        
-        coeur_j2_rect = image_coeur.get_rect(midleft=(txt_vie_j2_rect.right + 10, txt_vie_j2_rect.centery))
-        screen.blit(image_coeur, coeur_j1_rect)
-        screen.blit(image_coeur, coeur_j2_rect)
+        for i in range (helico1.lives):
+            coeur_j1_rect = image_coeur.get_rect(midleft=(txt_vie_j1_rect.right + 10 + i*30, txt_vie_j1_rect.centery))
+            screen.blit(image_coeur, coeur_j1_rect)
+        for i in range (helico2.lives):
+            coeur_j2_rect = image_coeur.get_rect(midleft=(txt_vie_j2_rect.right + 10 + i*30, txt_vie_j2_rect.centery))
+            screen.blit(image_coeur, coeur_j2_rect)
 
         # Spawn aléatoire
         spawn_timer += 1
