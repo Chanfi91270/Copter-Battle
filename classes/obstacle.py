@@ -2,6 +2,7 @@ import random
 import pygame
 
 SPEED = 3
+PROJECTILE_SPEED = SPEED + 2
 
 class Obstacle:
     def __init__(self, x: int, y: int, image : pygame.Surface, lives: int, mobile: bool, armed: bool):
@@ -27,16 +28,14 @@ class Obstacle:
     def shoot(self):
         if self.armed and self.shoot_cooldown <= 0:
             projectile = pygame.Rect(self.hitbox.left - 10, self.hitbox.centery - 5, 10, 5)
-            projectile_image = pygame.Surface((10, 5))
-            projectile_image.fill((255, 0, 0))
-            self.projectiles.append((projectile, projectile_image))
+            self.projectiles.append(projectile)
             self.shoot_cooldown = 60 
 
     #Faire bouger les projectiles et les supprimer s'ils sortent de l'écran
     def update_projectiles(self):
-        for projectile, projectile_image in self.projectiles:
-            projectile.x -= SPEED - 2
-        self.projectiles = [(p, pi) for p, pi in self.projectiles if p.x > 0]
+        for projectile in self.projectiles:
+            projectile.x -= PROJECTILE_SPEED
+        self.projectiles = [p for p in self.projectiles if p.x > 0]
 
         if self.shoot_cooldown > 0:
             self.shoot_cooldown -= 1

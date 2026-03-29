@@ -327,6 +327,16 @@ while running:
             obs.shoot()
             obs.update_projectiles()
             screen.blit(obs.image, obs.hitbox)
+
+            for projectile in obs.projectiles[:]:
+                pygame.draw.rect(screen, (255, 0, 0), projectile)
+                if projectile.colliderect(helico1.rect):
+                    helico1.take_damage()
+                    obs.projectiles.remove(projectile)
+                elif projectile.colliderect(helico2.rect):
+                    helico2.take_damage()
+                    obs.projectiles.remove(projectile)
+
             if obs.check_collision(helico1):
               helico1.take_damage()
               obs.take_damage()
