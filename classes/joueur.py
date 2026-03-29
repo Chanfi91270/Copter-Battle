@@ -4,20 +4,13 @@ import socket
 PORT = 5555
 
 class Joueur:
-    def __init__(self, nom: str, score: int, server : bool):
+    def __init__(self, nom: str, server : bool):
         self.nom = nom
-        self.score = score
         self.server = server
 
         self.conn = None
         self.ecouteur = None
         self.connected = False
-
-    def augmenter_score(self, points: int):
-        self.score += points
-
-    def reset_score(self):
-        self.score = 0
 
     def est_server(self):
         return self.server
