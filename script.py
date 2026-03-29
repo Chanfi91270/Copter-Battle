@@ -1,9 +1,7 @@
-import pygame, random
+import pygame
 from classes.helico import Helicopter
-from classes.obstacle import Obstacle, spawn_obstacle
-from classes.bonus import Bonus, spawn_bonus
-from classes.joueur import Joueur
-
+from classes.obstacle import spawn_obstacle
+from classes.bonus import spawn_bonus
 
 pygame.init()
 screen = pygame.display.set_mode((0, 0), pygame.FULLSCREEN)
@@ -502,7 +500,6 @@ while running:
         if bonus_used_j2:
             apply_bonus_effect(helico2, bonus_used_j2, obstacles)
 
-        print(helico1.lives, helico2.lives)
         screen.blit(helico1.image, helico1.rect)
         screen.blit(helico2.image, helico2.rect)
 
@@ -517,9 +514,11 @@ while running:
         if helico1.check_collision(helico2):
            if not helico2.is_transparent:
                helico2.image.set_alpha(128)
+               helico1.image.set_alpha(128)
         else:
            if not helico2.is_transparent:
                helico2.image.set_alpha(255)
+
 
     elif etape == "EXPLOSION":
         screen.blit(image_desert, (0, 0))
