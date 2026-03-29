@@ -16,16 +16,10 @@ class Helicopter:
         self.bonus_rafale = False
 
         self.nb_rafale = 2
-        self.temps_bouclier = 2
+        self.temps_bouclier = 0
 
     def move(self, screen_width, screen_height):
         if self.rect.left > 0: self.rect.x -= 1
-
-        if self.is_transparent:
-            if pygame.time.get_ticks() - self.temps_bouclier > 2000:
-                self.is_transparent = False
-                self.image.set_alpha(255)
-
         keys = pygame.key.get_pressed()
         if keys[self.touches["gauche"]] and self.rect.left > 0: self.rect.x -= SPEED
         if keys[self.touches["droite"]] and self.rect.right < screen_width: self.rect.x += SPEED
@@ -38,19 +32,14 @@ class Helicopter:
 
     def set_transparency(self, is_transparent: bool):
         self.is_transparent = is_transparent
-        pygame.time.wait(3000)
         self.is_transparent = False
 
     def take_damage(self):
-        if not self.is_transparent:
-            if self.bonus_shield:
-                self.bonus_shield = False
-            else:
-                self.lives -= 1
-
-                self.is_transparent = True
-                self.temps_bouclier = pygame.time.get_ticks()
-                self.image.set_alpha(128)
+        if self.bonus_shield:
+            self.toggle_shield()
+        else:
+            self.lives -= 1
+            self.set_transparency(True)
 
     def check_collision(self, other_rect):
         return self.rect.colliderect(other_rect)
