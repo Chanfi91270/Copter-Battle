@@ -16,7 +16,7 @@ class Helicopter:
         self.bonus_rafale = False
 
         self.nb_rafale = 2
-        self.temps_bouclier = 0
+        self.temps_bouclier = 2
 
     def move(self, screen_width, screen_height):
         if self.rect.left > 0: self.rect.x -= 1

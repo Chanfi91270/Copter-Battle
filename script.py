@@ -1,4 +1,4 @@
-import pygame,random
+import pygame, random
 from classes.helico import Helicopter
 from classes.obstacle import Obstacle, spawn_obstacle
 from classes.bonus import Bonus, spawn_bonus
@@ -13,6 +13,11 @@ pygame.display.set_caption("Copter Battle")
 info = pygame.display.Info()
 SCREEN_WIDTH, SCREEN_HEIGHT = info.current_w, info.current_h
 
+temps_debut_match = 0
+winner_text = ""
+temps_final = ""
+h1_x, h1_y = 50, 100
+h2_x, h2_y = 50, SCREEN_HEIGHT - 250
 LIVES = 3
 
 #Images pour fond
@@ -28,6 +33,12 @@ image_coeur = pygame.transform.scale(image_coeur, (25, 25))
 
 image_cadre = pygame.image.load('./images/cadre.png').convert_alpha()
 image_cadre = pygame.transform.scale(image_cadre, (150,100))
+
+gif_explosion = []
+for i in range(1, 6):
+    img = pygame.image.load(f'./images/gif_explosion/frame_{i}.png').convert_alpha()
+    img = pygame.transform.scale(img, (110, 90))
+    gif_explosion.append(img)
 #Images pour hélicos
 
 img_helico1 = pygame.image.load('./images/helicoJ1.png').convert_alpha()
@@ -38,7 +49,7 @@ img_helico2 = pygame.transform.scale(img_helico2, (110, 90))
 
 gif_chargement = []
 for i in range(1, 9):
-    img = pygame.image.load(f'./images/gif/loading_{i}.png').convert_alpha()
+    img = pygame.image.load(f'./images/gif_chargement/loading_{i}.png').convert_alpha()
     gif_chargement.append(img)
 
 touches_j1 = {"gauche": pygame.K_q, "droite": pygame.K_d, "haut": pygame.K_z, "bas": pygame.K_s, "bonus": pygame.K_a}
@@ -111,12 +122,10 @@ bouton_rejoindre = pygame.Rect(SCREEN_WIDTH // 2 + 30, SCREEN_HEIGHT // 2 + 50, 
 bouton_retour = pygame.Rect(30, SCREEN_HEIGHT - 100, 200, 70)
 bouton_rejouer = pygame.Rect(SCREEN_WIDTH // 2 - 110, SCREEN_HEIGHT // 2 + 100, 220, 70)
 
-temps_debut_match = 0
-winner_text = ""
-temps_final = ""
+explosion_start_time = None
+explosion_duration_ms = 900
+helico_mort = None
 
-h1_x, h1_y = 50, 100
-h2_x, h2_y = 50, SCREEN_HEIGHT - 250
 
 etape = "ACCUEIL"
 
@@ -158,18 +167,20 @@ while running:
                 helico2.rect.topleft = (50, SCREEN_HEIGHT - 250)
                 obstacles.clear()
                 bonuses.clear()
+                helico_mort = None
+                explosion_start_time = None
                 etape = "ATTENTE_J2"
     # --- PARTIE DESSIN PAR ETAPE ---
 
     if etape == "ACCUEIL":
-        screen.blit(image_fond_menu, (0, 0))  # Fond ici
+        screen.blit(image_fond_menu, (0, 0))  
         txt_titre = font_titre.render("COPTER BATTLE", True, Vert)
         screen.blit(txt_titre, txt_titre.get_rect(center=(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2 - 100)))
         txt_msg = font_menu.render("APPUYEZ SUR ESPACE POUR COMMENCER", True, Blanc)
         screen.blit(txt_msg, txt_msg.get_rect(center=(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2 + 50)))
 
     elif etape == "MENU_CHOIX":
-        screen.blit(image_fond_menu, (0, 0))  # Fond ici aussi
+        screen.blit(image_fond_menu, (0, 0)) 
         overlay = pygame.Surface((SCREEN_WIDTH, SCREEN_HEIGHT), pygame.SRCALPHA)
         overlay.fill((0, 0, 0, 180))
         screen.blit(overlay, (0, 0))
@@ -191,7 +202,7 @@ while running:
         screen.blit(t_rejoindre, t_rejoindre.get_rect(center=bouton_rejoindre.center))
 
     elif etape == "ATTENTE_J2":
-        screen.blit(image_desert, (0, 0))  # Fond desert ici
+        screen.blit(image_desert, (0, 0))  
         screen.blit(img_helico1, (h1_x, h1_y))
         frame_index = (pygame.time.get_ticks() // 100) % len(gif_chargement)
         txt_attente = font_menu.render("EN ATTENTE JOUEUR 2", True, Blanc)
@@ -232,16 +243,19 @@ while running:
         texte_chrono = f"{minutes:02d}:{secondes:02d}"
         surf_chrono = font_menu.render(texte_chrono, True, Blanc)
         screen.blit(surf_chrono, (SCREEN_WIDTH // 2 - 40, 20))
+
         if helico1.lives <= 0 or helico2.lives <= 0:
             if helico1.lives <= 0:
                 winner_text = "VICTOIRE JOUEUR 2"
+                helico_mort = helico1
             else:
                 winner_text = "VICTOIRE JOUEUR 1"
+                helico_mort = helico2
 
             # On fige le temps affiché
             temps_final = texte_chrono
-            # On change d'étape pour afficher l'écran de fin au prochain tour de boucle
-            etape = "GAME_OVER"
+            explosion_start_time = pygame.time.get_ticks()
+            etape = "EXPLOSION"
 
         txt_vie_j1 = font_sub.render(f"Joueur 1:", True, Blanc)
         txt_vie_j2 = font_sub.render(f"Joueur 2:", True, Blanc)
@@ -347,6 +361,23 @@ while running:
            helico2.image.set_alpha(128)
         else:
            helico2.image.set_alpha(255)
+
+    elif etape == "EXPLOSION":
+        screen.blit(image_desert, (0, 0))
+
+        if helico_mort is helico1:
+            screen.blit(helico2.image, helico2.rect)
+        elif helico_mort is helico2:
+            screen.blit(helico1.image, helico1.rect)
+
+        if helico_mort is not None:
+            frame_index = (pygame.time.get_ticks() // 100) % len(gif_explosion)
+            explosion_rect = gif_explosion[frame_index].get_rect(center=helico_mort.rect.center)
+            screen.blit(gif_explosion[frame_index], explosion_rect)
+
+        if explosion_start_time is not None and pygame.time.get_ticks() - explosion_start_time >= explosion_duration_ms:
+            etape = "GAME_OVER"
+
     elif etape == "GAME_OVER":
         # 1. On affiche le fond (le même que le menu)
         screen.blit(image_fond_menu, (0, 0))
