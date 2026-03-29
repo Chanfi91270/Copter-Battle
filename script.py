@@ -514,7 +514,6 @@ while running:
         if helico1.check_collision(helico2):
            if not helico2.is_transparent:
                helico2.image.set_alpha(128)
-               helico1.image.set_alpha(128)
         else:
            if not helico2.is_transparent:
                helico2.image.set_alpha(255)
