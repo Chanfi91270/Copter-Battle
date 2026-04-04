@@ -45,6 +45,29 @@ class Helicopter:
                 self.pending_bonus = "bouclier"
         self.bonus_key_was_pressed = bonus_pressed
 
+    def move_reseau(self, touches: dict, screen_width: int, screen_height: int):
+        if self.is_transparent and pygame.time.get_ticks() >= self.transparent_until:
+            self.set_transparency(False)
+
+        if self.rect.left > 0: self.rect.x -= 1
+        if touches.get("gauche") and self.rect.left > 0: self.rect.x -= SPEED
+        if touches.get("droite") and self.rect.right < screen_width: self.rect.x += SPEED
+        if touches.get("haut") and self.rect.top > 0: self.rect.y -= SPEED
+        if touches.get("bas") and self.rect.bottom < screen_height: self.rect.y += SPEED
+
+        bonus_pressed = touches.get("bonus", False)
+        if bonus_pressed and not self.bonus_key_was_pressed and (self.bonus_bombes or self.bonus_rafale or self.bonus_shield):
+            if self.bonus_bombes:
+                self.bonus_bombes = False
+                self.pending_bonus = "bombe"
+            elif self.bonus_rafale:
+                self.bonus_rafale = False
+                self.pending_bonus = "rafale"
+            elif self.bonus_shield:
+                self.bonus_shield = False
+                self.pending_bonus = "bouclier"
+        self.bonus_key_was_pressed = bonus_pressed
+
     def toggle_shield(self):
         self.bonus_shield = not self.bonus_shield
 
