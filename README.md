@@ -35,17 +35,19 @@ Ce projet a pour objectif de développer un jeu 2D en utilisant la bibliothèque
 ## 🕹️ Contrôles
 
 ### Joueur 1 :
+
 - Z : Monter
 - S : Descendre
-- Q : Gauche
-- D : Droite
+- Q : Reculer
+- D : Avancer
 - A : Utiliser bonus
 
 ### Joueur 2 :
+
 - ↑ : Monter
 - ↓ : Descendre
-- ← : Gauche
-- → : Droite
+- ← : Reculer
+- → : Avancer
 - SHIFT droit : Utiliser bonus
 
 ---
@@ -62,16 +64,15 @@ pip install pygame
 
 Aucune autre dépendance externe n’est nécessaire, les autres modules utilisés (comme random ou socket) étant déjà inclus dans la bibliothèque standard de Python.
 Après l’installation des dépendances, il suffit de récupérer le projet (par clonage Git ou téléchargement manuel), puis de se placer dans le dossier racine. Il est important de conserver l’organisation des fichiers, notamment le dossier images/, qui contient les ressources graphiques indispensables au bon fonctionnement du jeu.
-Enfin, le jeu peut être lancé avec la commande suivante :	
+Enfin, le jeu peut être lancé avec la commande suivante :
 python script.py
 
 Si toutes les étapes ont été correctement suivies, le jeu se lancera en mode plein écran et sera prêt à être utilisé.
 
-
 ### 1. Cloner le projet
 
 ```bash
-git clone <url-du-repo>
+git clone https://github.com/yanis-91/Copter-Battle
 cd copter-battle
 ```
 
@@ -102,15 +103,7 @@ Le projet est organisé en plusieurs fichiers afin de séparer les différentes 
 - `bonus.py` : gère les différents bonus du jeu (bombe, rafale, bouclier)
 - `joueur.py` : gère la connexion réseau entre deux joueurs (socket)
 - `images/` : contient toutes les ressources graphiques utilisées dans le jeu
-
----
-
-## 🏁 Objectif du jeu (je lai déjà mis au début)
-
-Le but du jeu est de survivre le plus longtemps possible tout en éliminant son adversaire.
-
-Chaque joueur dispose d’un nombre limité de vies. Lorsqu’un joueur entre en collision avec un obstacle ou subit une attaque, il perd une vie.  
-La partie se termine lorsqu’un joueur n’a plus de vies. L’autre joueur est alors déclaré vainqueur.
+- `docs/` : contient tout ce qui est document pour le projet
 
 ---
 
@@ -122,19 +115,19 @@ Plusieurs améliorations peuvent être envisagées pour enrichir le projet :
 - ajout de nouveaux bonus et malus
 - intégration de sons et musiques
 - amélioration de l’interface utilisateur (menus, animations)
-- ajout d’une intelligence artificielle pour jouer en solo (peut être a enlever)
+- ajout d’une intelligence artificielle pour jouer en solo
 - optimisation des performances du jeu
 
 ---
 
-
 ## 👨‍💻 Auteur
 
 Projet réalisé par dans le cadre d’un projet universitaire en informatique par :
--	OUILLEDIRNE Yacine
--	HADJ-CHERIF Yanis
--	MOHAMED Chanfi
--	RIGAULT Kylian 
+
+- OUILLEDIRNE Yacine
+- HADJ-CHERIF Yanis
+- MOHAMED Chanfi
+- RIGAULT Kylian
 
 ---
 
