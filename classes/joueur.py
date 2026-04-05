@@ -201,8 +201,7 @@ class Joueur:
     def envoyer_touches(self, touches_dict: dict) -> None:
         self.envoyer({"type": "touches", "touches": touches_dict})
 
-    def envoyer_etat(self, helico1, helico2, obstacles) -> None:
-        
+    def envoyer_etat(self, helico1, helico2, obstacles, active_bombs, active_player_projectiles, bonuses) -> None:
         etat = {
             "type": "etat",
             "h1": {
@@ -235,7 +234,36 @@ class Joueur:
                 }
                 for o in obstacles
             ],
+            "bombes": [
+                {
+                    "x": b["rect"].x,
+                    "y": b["rect"].y,
+                    "exploded": b["exploded"],
+                    "explosion_start": b["explosion_start"],
+                    "spawn_time": b["spawn_time"],
+                }
+                for b in active_bombs
+            ],
+            "projectiles": [
+                {
+                    "x": s["rect"].x,
+                    "y": s["rect"].y,
+                    "w": s["rect"].width,
+                    "h": s["rect"].height,
+                }
+                for s in active_player_projectiles
+            ],
+            "bonus_sol": [
+                {
+                    "x": b.rect.x,
+                    "y": b.rect.y,
+                    "type": b.bonus_type,
+                    "active": b.active,
+                }
+                for b in bonuses  # ← il faut passer bonuses en paramètre
+            ],
         }
+        
         self.envoyer(etat)
 
     def recevoir_touches(self) -> None:

@@ -236,6 +236,33 @@ def appliquer_etat_reseau(etat):
             for p in o_data.get("projectiles", [])
         ]
         obstacles.append(obs)
+    # Bombes
+    active_bombs.clear()
+    for b in etat.get("bombes", []):
+        active_bombs.append({
+            "rect": pygame.Rect(b["x"], b["y"], 60, 80),
+            "spawn_time": b["spawn_time"],
+            "exploded": b["exploded"],
+            "explosion_start": b["explosion_start"],
+            "damage_done": True,  # le serveur gère les dégâts, pas le client
+        })
+
+    # Projectiles joueurs
+    active_player_projectiles.clear()
+    for s in etat.get("projectiles", []):
+        active_player_projectiles.append({
+            "rect": pygame.Rect(s["x"], s["y"], s["w"], s["h"]),
+            "direction": 1,
+            "owner": None,  # pas besoin côté client, juste pour l'affichage
+        })
+    # Bonus au sol
+    bonuses.clear()
+    for b_data in etat.get("bonus_sol", []):
+        if b_data["active"]:
+            img = images_bonus[b_data["type"]]
+            from classes.bonus import Bonus
+            b = Bonus(b_data["x"], b_data["y"], img, b_data["type"])
+            bonuses.append(b)
 
 
 bouton_lancer = pygame.Rect(SCREEN_WIDTH // 2 - 250, SCREEN_HEIGHT // 2 + 50, 220, 70)
@@ -655,7 +682,7 @@ while running:
 
             # Envoyer l'état au client si en ligne
             if mode_jeu == "enligne" and joueur_local:
-                joueur_local.envoyer_etat(helico1, helico2, obstacles)
+                joueur_local.envoyer_etat(helico1, helico2, obstacles, active_bombs, active_player_projectiles, bonuses)
 
         # RENDU OBSTACLES
         for obs in obstacles:
